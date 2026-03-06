@@ -1,0 +1,52 @@
+table Attributes
+	lineageTag: d6f5ab19-2c5c-422f-8720-d97b4d37888d
+
+	column Attributes
+		lineageTag: 58048cbc-4980-4952-bc36-717fdd5fe539
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Attributes Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Attributes Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Attributes Fields'
+		isHidden
+		lineageTag: 4d828e30-2979-4d71-8b91-83d46bc37666
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Attributes Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Attributes Order'
+		isHidden
+		formatString: 0
+		lineageTag: 9dc066ba-ff63-49c3-9a08-a0aca5c46ca3
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Attributes = calculated
+		mode: import
+		source =
+				{
+				    ("Region", NAMEOF(Customer[Country-Region]), 0),
+				    ("Category", NAMEOF('Product'[Category]), 1),
+				    ("Subcategory", NAMEOF('Product'[Subcategory]), 2),
+				    ("Product", NAMEOF('Product'[Product]), 3),
+				    ("Customer", NAMEOF('Customer'[Customer]), 4),
+				    ("Month", NAMEOF('Date'[Date].[Month]), 5)
+				}
+
+	annotation PBI_Id = 88aa9a573eb14902ae3d05db3d15dc47
+

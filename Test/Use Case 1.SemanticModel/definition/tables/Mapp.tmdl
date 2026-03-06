@@ -1,0 +1,29 @@
+table Mapp
+	lineageTag: 3c087f29-e648-451b-adb1-d5f5db8ffeb5
+
+	column Address
+		dataType: string
+		lineageTag: 343fd307-98ac-492e-bd3f-3fed165b64ee
+		summarizeBy: none
+		sourceColumn: Address
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: 68df4b13-30f3-4172-8e1d-cd94018123d3
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Mapp = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45Wys1ILClKTTQ0c0jPTczM0UvOz1XSUXJOzEtMSVSKjQUA", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Address = _t, Country = _t])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

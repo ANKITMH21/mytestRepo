@@ -1,0 +1,115 @@
+table Date
+	lineageTag: c18c5d03-0ff1-453b-8e25-c08d80e7cb23
+
+	column Date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: d8c3761f-3eab-4167-bd23-e89900217165
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: c31c7fc7-75de-4c91-b4bd-e4d66eb413c9
+			defaultHierarchy: LocalDateTable_526890d2-337b-47e9-9941-5128000f46b0.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DATE SID'
+		dataType: string
+		lineageTag: e237e489-7f83-4ff5-987d-8776976e2a64
+		summarizeBy: none
+		sourceColumn: DATE SID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Month'
+		dataType: string
+		lineageTag: 335048ce-398f-40e3-b557-31a85f1a713f
+		summarizeBy: none
+		sourceColumn: Year Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'LAST 13 Weeks CY Ind'
+		dataType: string
+		lineageTag: 78b3459b-036d-4df8-b120-5f3a75fe0eb8
+		summarizeBy: none
+		sourceColumn: LAST 13 Weeks CY Ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Last 13 Weeks PY Ind'
+		dataType: string
+		lineageTag: db1ca730-d543-49f9-bd19-cfae04f86529
+		summarizeBy: none
+		sourceColumn: Last 13 Weeks PY Ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Prior Month CY Ind'
+		dataType: string
+		lineageTag: c20c464b-ad77-40c6-a95c-261b96ac7656
+		summarizeBy: none
+		sourceColumn: Prior Month CY Ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Prior Month PY Ind'
+		dataType: string
+		lineageTag: eb67cfca-42c9-4a77-b0bf-493fc7ddae5e
+		summarizeBy: none
+		sourceColumn: Prior Month PY Ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'YTD CY Ind'
+		dataType: string
+		lineageTag: c2cce3b5-a795-4186-95b5-850821459688
+		summarizeBy: none
+		sourceColumn: YTD CY Ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'YTD PY Ind'
+		dataType: string
+		lineageTag: e6f44756-1f7f-46dd-ace2-ed833c9f4aa9
+		summarizeBy: none
+		sourceColumn: YTD PY Ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year =
+			
+			VAR MonthYearDate = DATEVALUE('Date'[Year Month])
+			RETURN YEAR(MonthYearDate)
+		formatString: 0
+		lineageTag: e743f065-dfb6-4290-b599-faf0148dc132
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month = ```
+			MONTH('Date'[Date]) 
+			```
+		formatString: 0
+		lineageTag: cbe49418-646d-40eb-b43a-36f2c5f830e7
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\ANKIMHAT\Downloads\AdventureWorks Sales_A.xlsx"), null, true),
+				    Date_Sheet = Source{[Item="Date",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Date_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type datetime}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+

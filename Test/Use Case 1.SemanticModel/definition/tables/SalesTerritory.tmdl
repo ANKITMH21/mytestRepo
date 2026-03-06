@@ -1,0 +1,33 @@
+table SalesTerritory
+	lineageTag: 8e16177a-5035-41e4-a1eb-c8a016721c05
+
+	column SalesTerritoryKey
+		dataType: string
+		lineageTag: b3f7eca9-c9fb-4c6b-9c70-addaf1efc57c
+		summarizeBy: none
+		sourceColumn: SalesTerritoryKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: 817688b0-39e1-409a-a4a9-adb7032c929c
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SalesTerritory = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\ANKIMHAT\Downloads\AdventureWorks Sales_A.xlsx"), null, true),
+				    SalesTerritory_Sheet = Source{[Item="SalesTerritory",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(SalesTerritory_Sheet, [PromoteAllScalars=true])
+				in
+				    #"Promoted Headers"
+
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_NavigationStepName = Navigation
+

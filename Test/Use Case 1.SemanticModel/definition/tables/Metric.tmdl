@@ -1,0 +1,52 @@
+table Metric
+	lineageTag: 3855e47b-24cd-4563-abc5-3a88c8988b67
+
+	column Metric
+		lineageTag: 772ad04d-d680-4305-acff-0e3d9686b7d3
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Metric Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Metric Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Metric Fields'
+		isHidden
+		lineageTag: 61206997-0b33-42be-86e8-0331c1b2c280
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Metric Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Metric Order'
+		isHidden
+		formatString: 0
+		lineageTag: 864525ef-f02b-41cf-951b-ea3efeae35e3
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Metric = calculated
+		mode: import
+		source =
+				{
+				    ("Total Sales", NAMEOF('Measure'[TotalSalesAmount]), 0),
+				    ("PY Sales", NAMEOF('Measure'[PY Sales]), 1),
+				    ("YoY Sales Growth", NAMEOF('Measure'[YoY Sales Growth]), 2),
+				    ("Total Cost", NAMEOF('Measure'[Total Cost]), 3),
+				    ("Total Profit", NAMEOF('Measure'[Total Profit]), 4),
+				    ("YoY Profit Growth", NAMEOF('Measure'[YoY Profit Growth]), 5)
+				}
+
+	annotation PBI_Id = 21e1524ee3e44b2c81d760780e1a6c90
+

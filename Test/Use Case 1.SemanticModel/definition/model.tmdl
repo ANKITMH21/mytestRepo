@@ -1,0 +1,33 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Customer","Product","Sales","SalesTerritory","User Mapping","Date","Mapp"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Customer
+ref table Product
+ref table Sales
+ref table SalesTerritory
+ref table 'User Mapping'
+ref table Date
+ref table DateTableTemplate_c2ec879a-9570-43a8-8494-b4f05eab8aaa
+ref table LocalDateTable_526890d2-337b-47e9-9941-5128000f46b0
+ref table Measure
+ref table Attributes
+ref table Metric
+ref table Mapp
+
+ref role Canada
+ref role 'Dynamic RLS'
+ref role 'My RLS'
+
+ref cultureInfo en-US
+

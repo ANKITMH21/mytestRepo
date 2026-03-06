@@ -1,0 +1,7 @@
+role 'My RLS'
+	modelPermission: read
+
+	tablePermission Mapp = [Address] == USERPRINCIPALNAME()
+
+	annotation PBI_Id = 652ab3b92e7c40d49c1681fa6b679ba5
+

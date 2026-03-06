@@ -1,0 +1,127 @@
+table Measure
+	lineageTag: c7c8efcc-805e-4485-b975-4319bc36d84d
+
+	measure 'Total Profit' = SUM(Sales[Total Profit])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: a0c191b1-7e8b-4ac6-8997-a1f4612ff71a
+
+	measure 'PY Profit' =
+			CALCULATE(
+			    SUM('Sales'[Total Profit]),
+			    SAMEPERIODLASTYEAR('Date'[Date])
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 0923705e-0c1b-4133-a787-4fb8ceabc8c1
+
+	measure TotalSalesAmount = ```
+			SUM(Sales[Sales Amount]) 
+			```
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: cca50629-fea7-4b34-b0cf-6e63f7655635
+
+	measure 'Dynamic Title' =
+			
+			VAR SelectedYear = SELECTEDVALUE('Date'[Year])
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    SelectedYear = 2023, "Sales Analysis Details - 2023",
+			    SelectedYear = 2024, "Sales Analysis Details - 2024",
+			    SelectedYear = 2025, "Sales Analysis Details - 2025",
+			    "Sales Report"
+			)
+		lineageTag: 62280925-3c92-47e5-afc4-4e89d32aed0b
+
+	measure TotalSalesByDueDate = ```
+			
+			 CALCULATE([TotalSalesAmount],USERELATIONSHIP(Sales[DueDateKey],'Date'[DATE SID]))
+			```
+		lineageTag: 5ef2d1af-797b-4d9c-a726-71d0e8297cf6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalSalesByShipDate = ```
+			
+			 CALCULATE([TotalSalesAmount],USERELATIONSHIP(Sales[ShipDateKey],'Date'[DATE SID]))
+			```
+		lineageTag: 5a871873-7c5c-4302-b5a5-64af92c615e6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CurrentYearSales =
+			
+			VAR SelectedYear = SELECTEDVALUE('Date'[Year])
+			RETURN
+			 CALCULATE([TotalSalesAmount],FILTER(ALL('Date'[Year]),'Date'[Year] = SelectedYear))
+		lineageTag: f8f0adf9-3ace-4e46-a11b-41edfa56fee8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure LastYearSales =
+			
+			VAR SelectedYear = SELECTEDVALUE('Date'[Year])
+			RETURN
+			 CALCULATE([TotalSalesAmount],FILTER(ALL('Date'[Year]),'Date'[Year] = SelectedYear-1))
+		lineageTag: b27db503-85ed-4d6a-8e84-2c945a782466
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CurrentYearProfit =
+			
+			VAR SelectedYear = SELECTEDVALUE('Date'[Year])
+			RETURN
+			 CALCULATE([Total Profit],FILTER(ALL('Date'[Year]),'Date'[Year] = SelectedYear))
+		lineageTag: 88eeb8e2-a2b0-4833-b6f5-ce75811151c8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure LastYearProfit =
+			
+			VAR SelectedYear = SELECTEDVALUE('Date'[Year])
+			RETURN
+			 CALCULATE([Total Profit],FILTER(ALL('Date'[Year]),'Date'[Year] = SelectedYear-1))
+		lineageTag: 358c28cc-d3df-4d68-a6e7-d07323ed7043
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'YoY Profit Growth' = ```
+			DIVIDE([Total Profit] - [PY Profit] , [PY Profit], 0) 
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 02e73f40-a4cc-4572-a555-c16bee99dad8
+
+	measure 'PY Sales' = ```
+			CALCULATE([TotalSalesAmount],SAMEPERIODLASTYEAR('Date'[Date])) 
+			```
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: d7264897-0b1c-4d36-9255-0d27084b6fe5
+
+	measure 'YoY Sales Growth' = ```
+			DIVIDE([TotalSalesAmount] - [PY Sales] , [PY Sales], 0) 
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 90e3c975-d74b-444b-9c7c-e476e7db9f4e
+
+	measure 'Total Cost' = ```
+			SUM(Sales[Total Product Cost]) 
+			```
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 0e39659b-332e-4b84-86ca-ed6198a4165c
+
+	column Value
+		formatString: 0
+		lineageTag: 758ab579-5fd5-44f6-9072-67cf7e60bd2f
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Measure = calculated
+		mode: import
+		source = ```
+				{BLANK()} 
+				```
+
+	annotation PBI_Id = c5a83acedad54ff3b390ffc5a527a215
+

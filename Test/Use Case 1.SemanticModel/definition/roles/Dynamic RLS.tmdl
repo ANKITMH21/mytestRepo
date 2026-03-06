@@ -1,0 +1,7 @@
+role 'Dynamic RLS'
+	modelPermission: read
+
+	tablePermission 'User Mapping' = TRIM('User Mapping'[Email Address]) = USERPRINCIPALNAME()
+
+	annotation PBI_Id = bf164418c4674b7e9564e2af58d3df3b
+

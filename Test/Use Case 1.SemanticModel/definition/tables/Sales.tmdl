@@ -1,0 +1,170 @@
+table Sales
+	lineageTag: 6d2476d5-4b3c-4635-9fb8-47c865498aec
+
+	column SalesOrderLineKey
+		dataType: string
+		lineageTag: 18aeb0f5-4d39-4325-8633-be5740efbf09
+		summarizeBy: none
+		sourceColumn: SalesOrderLineKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResellerKey
+		dataType: string
+		lineageTag: fcb8cdff-1f3b-4dd5-b2e4-973a6d0b90e2
+		summarizeBy: none
+		sourceColumn: ResellerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerKey
+		dataType: string
+		lineageTag: dabd51e9-b5df-47a1-8dba-67f997627717
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductKey
+		dataType: string
+		lineageTag: 47d02552-197f-46fb-9fd3-3eab1e3e9486
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderDateKey
+		dataType: string
+		lineageTag: e97cf6c7-e402-4fb5-8820-4d784445feeb
+		summarizeBy: none
+		sourceColumn: OrderDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column DueDateKey
+		dataType: string
+		lineageTag: 3a0b355e-bed0-49ee-8b6d-71ab24772838
+		summarizeBy: none
+		sourceColumn: DueDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ShipDateKey
+		dataType: string
+		lineageTag: 97a4ab57-911d-45d2-ab97-8a9f18b7808c
+		summarizeBy: none
+		sourceColumn: ShipDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesTerritoryKey
+		dataType: string
+		lineageTag: b5dbdca5-cd60-4409-a37a-0502bbec5ce3
+		summarizeBy: none
+		sourceColumn: SalesTerritoryKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Quantity'
+		dataType: string
+		lineageTag: f0ff4f26-4ec3-4b20-9c82-6c70f083b7cc
+		summarizeBy: none
+		sourceColumn: Order Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Unit Price'
+		dataType: double
+		lineageTag: 681c3bc4-df88-4da5-9d1a-b273e5e18064
+		summarizeBy: sum
+		sourceColumn: Unit Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Extended Amount'
+		dataType: double
+		lineageTag: 5018ef4c-9a3a-40fa-a667-f55f0ae7207c
+		summarizeBy: sum
+		sourceColumn: Extended Amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Unit Price Discount Pct'
+		dataType: string
+		lineageTag: af0ff620-d12c-496c-9ba1-c5fb33ed1012
+		summarizeBy: none
+		sourceColumn: Unit Price Discount Pct
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Product Standard Cost'
+		dataType: double
+		lineageTag: c4f71c79-63b4-441e-9922-fb4e48d8e246
+		summarizeBy: sum
+		sourceColumn: Product Standard Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Total Product Cost'
+		dataType: double
+		lineageTag: 014fffbe-100c-449f-aabe-02d0c16d4f69
+		summarizeBy: sum
+		sourceColumn: Total Product Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Sales Amount'
+		dataType: double
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 16659a9e-dd16-42b0-adff-8cdb6dc44f48
+		summarizeBy: sum
+		sourceColumn: Sales Amount
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Total Profit' = Sales[Sales Amount]-Sales[Total Product Cost]
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 2a47b491-f9c4-45a4-a8d9-2d6ba0178f5f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column Date = ```
+			RELATED('Date'[Date].[Date])
+			 
+			```
+		formatString: Short Date
+		lineageTag: 1efaaf61-f5e5-44d4-8869-ebae275e8493
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Sales = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\ANKIMHAT\Downloads\AdventureWorks Sales_A.xlsx"), null, true),
+				    Sales_Sheet = Source{[Item="Sales",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Sales_Sheet, [PromoteAllScalars=true]),
+				    #"Replaced Value" = Table.ReplaceValue(#"Promoted Headers","na",0,Replacer.ReplaceValue,{"Sales Amount"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","NA",0,Replacer.ReplaceValue,{"Sales Amount"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Replaced Value1",{{"Sales Amount", type number}, {"Total Product Cost", type number}, {"Product Standard Cost", type number}, {"Extended Amount", type number}, {"Unit Price", type number}}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Changed Type","na",0,Replacer.ReplaceValue,{"Order Quantity"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","NA",0,Replacer.ReplaceValue,{"Order Quantity"})
+				in
+				    #"Replaced Value3"
+
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_NavigationStepName = Navigation
+

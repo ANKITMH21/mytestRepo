@@ -1,0 +1,50 @@
+relationship AutoDetected_2b571d4e-a311-4c5b-8b9a-de3b58628b07
+	fromColumn: Sales.ProductKey
+	toColumn: Product.ProductKey
+
+relationship AutoDetected_6dcc6f7b-0764-4f83-9d64-0ea33ace0095
+	fromColumn: Sales.SalesTerritoryKey
+	toColumn: SalesTerritory.SalesTerritoryKey
+
+relationship a9780f99-8158-f50d-596d-5e613fed85d9
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: Sales.CustomerKey
+	toColumn: Customer.CustomerKey
+
+relationship c31c7fc7-75de-4c91-b4bd-e4d66eb413c9
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Date.Date
+	toColumn: LocalDateTable_526890d2-337b-47e9-9941-5128000f46b0.Date
+
+relationship f378d276-a58c-b7c4-9a3e-eff864a65dc0
+	fromColumn: Sales.OrderDateKey
+	toColumn: Date.'DATE SID'
+
+relationship e6401dbb-0709-0b98-c987-142b3b5fe3e1
+	isActive: false
+	fromColumn: Sales.ShipDateKey
+	toColumn: Date.'DATE SID'
+
+relationship 8217b628-9d9a-7355-0346-70534aabc8ef
+	isActive: false
+	fromColumn: Sales.DueDateKey
+	toColumn: Date.'DATE SID'
+
+relationship 8ec57f55-135a-7877-4278-bec86527aaa0
+	isActive: false
+	fromColumn: Sales.Date
+	toColumn: Date.Date
+
+relationship ac1e8a9c-b35e-119b-48bb-1e03790cc1ea
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'User Mapping'.Country
+	toColumn: SalesTerritory.Country
+
+relationship AutoDetected_b8dd303e-c02e-4b10-ab91-92eefa2858a6
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: Mapp.Country
+	toColumn: SalesTerritory.Country
+
